@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+        <head>
+                <meta http-equiv="Content-Security-Policy" 
+                content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval';
+                 img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;">
+               <!--   content="img-src filesystem">    -->
+                
+                <meta charset="utf-8"/>
+                <meta name="author" content="Mason" />
+                <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+
+                <title></title>
+                <style>
+                  html, body {
+                    padding: 0;
+                    margin: 0;
+                  }
+                </style>
+              </head>
+
+
+    <body>
+        <div>
+                <script src="js/three.min.js"></script>
+                <script src="js/SceneUtils.js"></script>
+        </div>
+
+        <script>
+        
+                var camera, scene, renderer;
+                var geometry, material, mesh, cylinder;
+                var backgroundScene, backgroundCamera;
+
+                init();
+                animate();
+
+                function init() {
+
+                     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 50 );
+			        camera.position.z = 30;
+
+                    scene = new THREE.Scene();
+
+                    //foreground
+                        // load a texture, set wrap mode to repeat
+                        var texture = new THREE.TextureLoader().load( "https://i.imgur.com/zUJBZdC.jpg" );
+                        texture.wrapS = THREE.RepeatWrapping;
+                        texture.wrapT = THREE.RepeatWrapping;
+
+                        //set how often the image repeats, generally this should remain as is.
+                        texture.repeat.set( 1, 1 );
+
+
+                        var geometry = new THREE.CylinderGeometry( 2, 2, 10, 15 ); //5,5,20,32
+                        var material = new THREE.MeshBasicMaterial( {map: texture} );
+
+
+
+
+                        cylinder = new THREE.Mesh( geometry, material );
+                        cylinder.position.set( 4, 10, 1 ); //(LR, UD, BF) - (x, y, z) ( x= left/right, y = up/down, BF = back/forth)
+                        scene.add( cylinder );
+
+
+
+                    //background
+                        // *Load the background texture - note this needs to be loaded from a CORS compliant website 
+                        //-- imgur is the quickest way to do this. still working out other solutions. Think Walmart
+                        //-- is enforcing an abnormal CORS policy blocking file:/// link associations
+                        var bg_texture = new THREE.TextureLoader().load( "https://i.imgur.com/w9Hgaav.jpg" );
+
+                        //Mesh refers to the surface area of an object. without it, the object would just be lines with no fill
+                        // -- textures are applied to a mesh. A texture follows what is called a UV Map which corresponds to the
+                        // -- exact way a image should "wrap" an object and also related to things like scale and repetition
+                        var backgroundMesh = new THREE.Mesh(
+
+                        //(x,y,z) - as a plane,
+                        // --though still a vector (x,y,z object behind the scenes thus requiring a Z)
+                        // -- this would still only represent X and Y vals because planes &/or images are of course 2D not 3D
+                        //-- only use X and Y vals to scale this image. Leave the Z as 0. X and Y should scale respectively.
+                        new THREE.PlaneGeometry(2, 2, 0),
+                        new THREE.MeshBasicMaterial({
+                            map: bg_texture
+                        }));
+
+                        backgroundMesh .material.depthTest = false;
+                        backgroundMesh .material.depthWrite = false;
+
+                        // Create your background scene
+                         backgroundScene = new THREE.Scene();
+                         backgroundCamera = new THREE.Camera();
+                        backgroundScene .add(backgroundCamera );
+                        backgroundScene .add(backgroundMesh );
+
+
+
+
+                    renderer = new THREE.WebGLRenderer( { antialias: true } );
+                    renderer.setSize( window.innerWidth, window.innerHeight );
+                    document.body.appendChild( renderer.domElement );
+
+
+                }
+
+                function animate() {
+
+                    requestAnimationFrame( animate );
+                        //cylinder.rotation.x += 0.005;
+                        cylinder.rotation.y -= 0.005;
+
+
+                    //the below two lines are for allowing to cameras to work at once. 
+                    // -- do not remove the below lines as it will cause only one camera to work
+                    // -- thus only displaying one image at a time.
+                    renderer.autoClear = false;
+                    renderer.clear();
+                    
+                    //Be sure to put background scene call before foreground objects. 
+                    
+                    renderer.render( backgroundScene, backgroundCamera );
+                    renderer.render( scene, camera );
+                    
+
+                }
+
+         </script>
+
+    </body>
+</html>
+
+
+
+
