@@ -42,7 +42,8 @@
                     // --  as seen later in the script
                      camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 50 );
                      //decreasing this will make the object seem further away
-			        camera.position.z = 30;
+                    camera.position.z = 30;
+
 
                     scene = new THREE.Scene();
 
@@ -52,22 +53,41 @@
 
                         //top diamater scale,  bottom diameter scale, hieght, max diameter (this could actually be middle circumfrence) but the
                         // -- scale of this should be considered as relational to the height.
-                        var geometry = new THREE.CylinderGeometry( 2, 2, 10, 15 ); //5,5,20,32
+                        var geometry = new THREE.CylinderGeometry( 2, 2, 8, 15 ); //5,5,20,32
 
-                        // load the billboard (foreground) texture, set wrap mode to repeat
-                        var texture = new THREE.TextureLoader().load( "https://i.imgur.com/zUJBZdC.jpg" );
+                        //SWAP BILLBOARD TEXTURES HERE
+                            // load the billboard (foreground) texture, set wrap mode to repeat
+
+                                //##### Rascall Flatts ############
+                            // var texture = new THREE.TextureLoader().load( "https://i.imgur.com/zUJBZdC.jpg" ); 
+                            
+                                //##### mikes hard lemonade ############
+                            var texture = new THREE.TextureLoader().load( "https://upload.wikimedia.org/wikipedia/en/2/2e/Logo_for_Mike%27s_Hard_Lemonade_Co.png" );
+
+
+
+
+
+
+
                         texture.wrapS = THREE.RepeatWrapping;
                         texture.wrapT = THREE.RepeatWrapping;
                         //set how often the image repeats, generally this should remain as is.
                         texture.repeat.set( 1, 1 );
-                        //apply the texture to the material (textures (images) are appliied to materials, and materials are 'mapped' to a EV map which is abstracted from you in this case by the 3js library (in short, materianls are applied to Mesh which we will see soon))
+                        //apply the texture to the material (textures (images) are appliied to materials, 
+                        // -- and materials are 'mapped' to a EV map which is abstracted from you in this case 
+                        // -- by the 3js library (in short, materianls are applied to Mesh which we will see soon)
                         var material = new THREE.MeshBasicMaterial( {map: texture} );
 
 
 
 
                         cylinder = new THREE.Mesh( geometry, material );
-                        cylinder.position.set( 4, 10, 1 ); // (x, y, z) - ( x= left/right, y = up/down, z = back/forth)
+                        cylinder.position.set( -10, -10, 1 ); // (x, y, z) - ( x= left/right, y = up/down, z = back/forth)
+                        cylinder.rotation.set( -.2, 0, 0 ); //  x = back/forth rotation (tilt away from you), 
+                                                            //  y= the rotating axis, this does nothing, 
+                                                            //  z= left/right horizonatal rotation (turn the bottle on its side)
+                    
                         scene.add( cylinder );
 
 
@@ -76,7 +96,7 @@
                         // *Load the background texture - note this needs to be loaded from a CORS compliant website 
                         //-- imgur is the quickest way to do this. still working out other solutions. Think Walmart
                         //-- is enforcing an abnormal CORS policy blocking file:/// link associations
-                        var bg_texture = new THREE.TextureLoader().load( "https://i.imgur.com/w9Hgaav.jpg" );
+                        var bg_texture = new THREE.TextureLoader().load( "https://i.imgur.com/YcuswGp.jpg" );
 
                         //Mesh refers to the surface area of an object. without it, the object would just be lines with no fill
                         // -- textures are applied to a mesh. A texture follows what is called a UV Map which corresponds to the
@@ -87,10 +107,9 @@
                         // --though still a vector (x,y,z object behind the scenes thus requiring a Z)
                         // -- this would still only represent X and Y vals because planes &/or images are of course 2D not 3D
                         //-- only use X and Y vals to scale this image. Leave the Z as 0. X and Y should scale respectively.
-                        new THREE.PlaneGeometry(2, 2, 0),
-                        new THREE.MeshBasicMaterial({
-                            map: bg_texture
-                        }));
+                        new THREE.PlaneGeometry(1.5, 2, 0),
+                        new THREE.MeshBasicMaterial({map: bg_texture})
+                        );
 
                         backgroundMesh .material.depthTest = false;
                         backgroundMesh .material.depthWrite = false;
@@ -98,8 +117,8 @@
                         // Create your background scene
                          backgroundScene = new THREE.Scene();
                          backgroundCamera = new THREE.Camera();
-                        backgroundScene .add(backgroundCamera );
-                        backgroundScene .add(backgroundMesh );
+                         backgroundScene .add(backgroundCamera );
+                         backgroundScene .add(backgroundMesh );
 
 
 
