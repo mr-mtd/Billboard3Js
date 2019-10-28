@@ -42,7 +42,7 @@
 						var texture = new THREE.TextureLoader().load( './textures/jim_home.png' );
 
 						var geometry = new THREE.SphereBufferGeometry( 100.0, 48, 24 );
-						var geometry = new THREE.SphereBufferGeometry( 500.0, 250, 175 );
+						//var geometry = new THREE.SphereBufferGeometry( 500.0, 250, 175 );
 						var material = new THREE.MeshBasicMaterial( { map: texture } );
 
 
@@ -61,7 +61,7 @@
 
 				        ///top diamater scale,  bottom diameter scale, hieght, max diameter (this could actually be middle circumfrence) but the
                        	//scale of this should be considered as relational to the height.
-                        var geometry2 = new THREE.CylinderGeometry( 3.5, 3.5, 15, 15 ); //5,5,20,32
+                        var geometry2 = new THREE.CylinderGeometry( 1.5, 1.5, 7, 7 ); //5,5,20,32
 
                         //###    SWAP BILLBOARD TEXTURES HERE   #####  //
                     	//load the billboard (foreground) texture, set wrap mode to repeat
@@ -120,7 +120,7 @@
 					//mesh.rotation.y += 0.003;
 
 				//iCan mesh x and y rotation
-					cylinder.rotation.y += 0.005;
+					cylinder.rotation.y -= 0.005;
 					cylinder.rotation.x += 0.00;
 
 				renderer.render( scene, camera );
