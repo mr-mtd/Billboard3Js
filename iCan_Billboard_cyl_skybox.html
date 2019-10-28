@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - geometry - cube</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+	<body>
+
+		<script type="module">
+
+			import * as THREE from './js/three.module.js';
+						import { GUI } from './jsm/libs/dat.gui.module.js';
+			import { OrbitControls } from './jsm/controls/OrbitControls.js';
+
+			var camera, scene, renderer, cylinder;
+			var mesh;
+
+			init();
+			animate();
+
+			function init() {
+
+
+
+
+				//3D Sphere Skybox
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 900 ); //1, 900
+				camera.position.z = 30;
+
+				scene = new THREE.Scene();
+
+				var texture = new THREE.TextureLoader().load( './textures/jim_home.png' );
+
+				var geometry = new THREE.SphereBufferGeometry( 100.0, 48, 24 );
+				var geometry = new THREE.SphereBufferGeometry( 500.0, 250, 175 );
+				var material = new THREE.MeshBasicMaterial( { map: texture } );
+
+
+				material.side = THREE.BackSide
+
+			
+				mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+
+
+
+
+
+
+				//Add iCon
+				                        //top diamater scale,  bottom diameter scale, hieght, max diameter (this could actually be middle circumfrence) but the
+                        // -- scale of this should be considered as relational to the height.
+                        var geometry2 = new THREE.CylinderGeometry( 5, 5, 20, 32 ); //5,5,20,32
+                        //SWAP BILLBOARD TEXTURES HERE
+                            // load the billboard (foreground) texture, set wrap mode to repeat
+
+                                //##### Rascall Flatts ############
+                            // var texture = new THREE.TextureLoader().load( "https://i.imgur.com/zUJBZdC.jpg" ); 
+                            
+                                //##### mikes hard lemonade ############
+                            var texture2 = new THREE.TextureLoader().load( "https://upload.wikimedia.org/wikipedia/en/2/2e/Logo_for_Mike%27s_Hard_Lemonade_Co.png" );
+
+
+
+                        texture.wrapS = THREE.RepeatWrapping;
+                        texture.wrapT = THREE.RepeatWrapping;
+                        //set how often the image repeats, generally this should remain as is.
+                        texture.repeat.set( 1, 1 );
+                        //apply the texture to the material (textures (images) are appliied to materials, 
+                        // -- and materials are 'mapped' to a EV map which is abstracted from you in this case 
+                        // -- by the 3js library (in short, materianls are applied to Mesh which we will see soon)
+                        var material2 = new THREE.MeshBasicMaterial( {map: texture2} );
+
+
+
+
+                        cylinder = new THREE.Mesh( geometry2, material2 );
+                        cylinder.position.set( 1, 1, 3 ); // (x, y, z) - ( x= left/right, y = up/down, z = back/forth)
+                        cylinder.rotation.set( -.2, 0, 0 ); //  x = back/forth rotation (tilt away from you), 
+                                                            //  y= the rotating axis, this does nothing, 
+                                                            //  z= left/right horizonatal rotation (turn the bottle on its side)
+                    
+                        scene.add( cylinder );
+
+
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				mesh.rotation.x += 0.005;
+				mesh.rotation.y += 0.003;
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>
